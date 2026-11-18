@@ -13,9 +13,20 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: 'windows-latest'
-            # We change args to only build the exe and skip the installer/bundle part if needed
-            args: '--no-bundle' 
+
+          - platform: "macos-latest"
+            args: "--target aarch64-apple-darwin --bundles app,dmg"
+            aix_target: "osx_arm64"
+          - platform: "macos-latest"
+            args: "--target x86_64-apple-darwin --bundles app,dmg"
+            aix_target: "osx_amd64"
+          - platform: "ubuntu-24.04"
+            args: ""
+            aix_target: "linux_amd64"
+          - platform: "windows-latest"
+            args: "--no-bundle"
+            aix_target: "windows_amd64"
+
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout repository
@@ -31,13 +42,11 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Sync node version and setup cache
         uses: actions/setup-node@v4
         with:
-          node-version: "lts/*"
+          node-version: "24"
           cache: "pnpm"
 
       - name: Install app dependencies
@@ -47,20 +56,8 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # This line is the magic trick to skip the error you saw
-          TAURI_SKIP_SIGNING: true 
-          CI: false
-        with:
-          tagName: ${{ github.ref_name }}
-          releaseName: "v__VERSION__"
-          releaseDraft: true
-          prerelease: false
-          args: ${{ matrix.args }}
-
-      # THIS IS THE NEW STEP TO GIVE YOU THE DOWNLOAD LINK
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        if: always() 
-        with:
-          name: En-Croissant-Windows-EXE
-          path: src-tauri/target/release/en-croissant.exe
+          TAURI_SKIP_SIGNING: true
+          AIX_EXTENSION_TARGET: ${{ matrix.aix_target }}
+          AIX_EXTENSION_FORCE_DOWNLOAD: "1"
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
