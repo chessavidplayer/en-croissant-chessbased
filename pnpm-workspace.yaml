@@ -4,3 +4,4 @@ allowBuilds:
   core-js: true
   esbuild: true
   protobufjs: true
+  @lichess-org/chessground@https://codeload.github.com/chessavidplayer/chessground-chessbased/tar.gz/8eec67bf7498535394d686996024c3af3752824c: true
