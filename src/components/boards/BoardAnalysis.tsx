@@ -1,4 +1,4 @@
-import { Paper, Portal, Stack, Tabs } from "@mantine/core";
+import { Box, Divider, Paper, Portal, Stack, Tabs } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import {
   IconDatabase,
@@ -211,13 +211,27 @@ function BoardAnalysis() {
     <>
       <EvalListener />
       <Portal target="#left" style={{ height: "100%" }}>
-        <Board
-          practicing={practicing}
-          editingMode={editingMode}
-          boardRef={boardRef}
-          selectedPiece={selectedPiece}
-        />
+        <Stack h="100%" gap="xs">
+          <Box style={{ flex: "1 1 60%", minHeight: 0 }}>
+            <Board
+              practicing={practicing}
+              editingMode={editingMode}
+              boardRef={boardRef}
+              selectedPiece={selectedPiece}
+            />
+          </Box>
+          {!isCompact && (
+            <Paper
+              withBorder
+              p="xs"
+              style={{ flex: "1 1 40%", minHeight: 0, overflowY: "auto" }}
+            >
+              <DatabasePanel />
+            </Paper>
+          )}
+        </Stack>
       </Portal>
+
       <Portal target="#topRight" style={{ height: "100%" }}>
         <Paper
           withBorder
@@ -230,7 +244,7 @@ function BoardAnalysis() {
             w="100%"
             h="100%"
             value={currentTabSelected}
-            onChange={(v) => setCurrentTabSelected(v || (isCompact ? "moves" : "info"))}
+            onChange={(v) => setCurrentTabSelected(v || (isCompact ? "moves" : "analysis"))}
             keepMounted={false}
             activateTabWithKeyboard={false}
             style={{
@@ -254,56 +268,37 @@ function BoardAnalysis() {
                   {t("Board.Tabs.Moves")}
                 </Tabs.Tab>
               )}
+              <Tabs.Tab value="analysis" leftSection={<IconZoomCheck size="1rem" />}>
+                {t("Board.Tabs.Analysis")}
+              </Tabs.Tab>
+              {isCompact && (
+                <Tabs.Tab value="database" leftSection={<IconDatabase size="1rem" />}>
+                  {t("Board.Tabs.Database")}
+                </Tabs.Tab>
+              )}
+              <Tabs.Tab value="info" leftSection={<IconInfoCircle size="1rem" />}>
+                {t("Board.Tabs.Info")}
+              </Tabs.Tab>
               {isRepertoire && (
                 <Tabs.Tab value="practice" leftSection={<IconTargetArrow size="1rem" />}>
                   {t("Board.Tabs.Practice")}
                 </Tabs.Tab>
               )}
-              <Tabs.Tab value="analysis" leftSection={<IconZoomCheck size="1rem" />}>
-                {t("Board.Tabs.Analysis")}
-              </Tabs.Tab>
-              <Tabs.Tab value="database" leftSection={<IconDatabase size="1rem" />}>
-                {t("Board.Tabs.Database")}
-              </Tabs.Tab>
-              <Tabs.Tab value="annotate" leftSection={<IconNotes size="1rem" />}>
-                {t("Board.Tabs.Annotate")}
-              </Tabs.Tab>
-              <Tabs.Tab value="info" leftSection={<IconInfoCircle size="1rem" />}>
-                {t("Board.Tabs.Info")}
-              </Tabs.Tab>
             </Tabs.List>
+
             {isCompact && (
               <Tabs.Panel value="moves" flex={1} style={{ overflowY: "hidden" }}>
                 {notationPanel}
               </Tabs.Panel>
             )}
-            {isRepertoire && (
-              <Tabs.Panel value="practice" flex={1} style={{ overflowY: "hidden" }}>
-                <PracticePanel />
-              </Tabs.Panel>
-            )}
-            <Tabs.Panel value="info" flex={1} style={{ overflowY: "hidden" }}>
-              <InfoPanel addGame={addGame} />
-            </Tabs.Panel>
-            <Tabs.Panel value="database" flex={1} style={{ overflowY: "hidden" }}>
-              <DatabasePanel />
-            </Tabs.Panel>
-            <Tabs.Panel value="annotate" flex={1} style={{ overflowY: "hidden" }}>
-              <AnnotationPanel />
-            </Tabs.Panel>
-            <Tabs.Panel value="analysis" flex={1} style={{ overflowY: "hidden" }}>
-              <AnalysisPanel />
-            </Tabs.Panel>
-          </Tabs>
-        </Paper>
-      </Portal>
-      {!isCompact && (
-        <Portal target="#bottomRight" style={{ height: "100%" }}>
-          {notationPanel}
-        </Portal>
-      )}
-    </>
-  );
-}
 
-export default BoardAnalysis;
+            <Tabs.Panel
+              value="analysis"
+              flex={1}
+              style={{ overflowY: "auto", padding: "0.5rem" }}
+            >
+              <Stack gap="xs" h="100%">
+                <Box style={{ flex: "1 1 55%", minHeight: "150px", overflowY: "auto" }}>
+                  <AnalysisPanel />
+                </Box>
+                <Divider />
