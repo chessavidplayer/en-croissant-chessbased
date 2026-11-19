@@ -4,7 +4,6 @@ import {
   IconDatabase,
   IconFileText,
   IconInfoCircle,
-  IconNotes,
   IconTargetArrow,
   IconZoomCheck,
 } from "@tabler/icons-react";
@@ -81,6 +80,7 @@ function BoardAnalysis() {
       store,
     });
   }, [setTabs, currentTab, documentDir, store]);
+
   const userSaveFile = useCallback(async () => {
     saveToFile({
       dir: documentDir,
@@ -90,6 +90,7 @@ function BoardAnalysis() {
       isUserSave: true,
     });
   }, [setTabs, currentTab, documentDir, store]);
+
   useEffect(() => {
     if (hasPersistentOrigin && autoSave && dirty) {
       saveFile();
@@ -145,6 +146,7 @@ function BoardAnalysis() {
     [keyMap.SAVE_FILE.keys, () => userSaveFile()],
     [keyMap.CLEAR_SHAPES.keys, () => clearShapes()],
   ]);
+
   useHotkeys([
     [keyMap.ANNOTATION_BRILLIANT.keys, () => !isPracticeRating && setAnnotation("!!")],
     [keyMap.ANNOTATION_GOOD.keys, () => !isPracticeRating && setAnnotation("!")],
