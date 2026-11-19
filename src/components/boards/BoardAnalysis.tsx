@@ -304,3 +304,38 @@ function BoardAnalysis() {
                   <AnalysisPanel />
                 </Box>
                 <Divider />
+                <Box style={{ flex: "1 1 45%", minHeight: "120px", overflowY: "auto" }}>
+                  <AnnotationPanel />
+                </Box>
+              </Stack>
+            </Tabs.Panel>
+
+            {isCompact && (
+              <Tabs.Panel value="database" flex={1} style={{ overflowY: "hidden" }}>
+                <DatabasePanel />
+              </Tabs.Panel>
+            )}
+
+            <Tabs.Panel value="info" flex={1} style={{ overflowY: "hidden" }}>
+              <InfoPanel addGame={addGame} />
+            </Tabs.Panel>
+
+            {isRepertoire && (
+              <Tabs.Panel value="practice" flex={1} style={{ overflowY: "hidden" }}>
+                <PracticePanel />
+              </Tabs.Panel>
+            )}
+          </Tabs>
+        </Paper>
+      </Portal>
+
+      {!isCompact && (
+        <Portal target="#bottomRight" style={{ height: "100%" }}>
+          {notationPanel}
+        </Portal>
+      )}
+    </>
+  );
+}
+
+export default BoardAnalysis;
