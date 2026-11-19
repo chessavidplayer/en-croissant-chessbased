@@ -52,3 +52,9 @@ jobs:
           AIX_EXTENSION_TARGET: ${{ matrix.aix_target }}
           AIX_EXTENSION_FORCE_DOWNLOAD: "1"
 
+      - name: Upload Windows exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: en-croissant-windows
+          path: src-tauri/target/release/*.exe
+
